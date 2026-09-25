@@ -1,12 +1,20 @@
-from daos.user_dao import UserDAOMongo
+from daos.user_dao_mongo import UserDAOMongo as UserDAO
 from models.user import User
 import time
 
-dao = UserDAOMongo()
+dao = UserDAO()
 
 def test_user_select():
+    dao.delete_all()
+    user = User(None, 'Joanne Test', 'joannetest@example.com')
+    dao.insert(user)
+    user = User(None, 'Joanne Test2', 'joannetest2@example.com')
+    dao.insert(user)
+    user = User(None, 'Joanne Test3', 'joannetest3@example.com')
+    dao.insert(user)
     user_list = dao.select_all()
     assert len(user_list) >= 3
+    dao.delete_all()
 
 def test_user_insert():
     user = User(None, 'Joanne Test', 'joannetest@example.com')
@@ -36,7 +44,7 @@ def test_user_delete():
     assigned_id = dao.insert(user)
     dao.delete(assigned_id)
 
-    new_dao = UserDAOMongo()
+    new_dao = UserDAO()
     user_list = new_dao.select_all()
     emails = [u.email for u in user_list]
     assert user.email not in emails

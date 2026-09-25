@@ -16,15 +16,20 @@ class UserDAOMongo:
     def __init__(self):
         try:
             env_path = ".env"
-            print(os.path.abspath(env_path))
             load_dotenv(dotenv_path=env_path)
 
             db_host = os.getenv("MONGODB_HOST")
+            db_user = os.getenv("DB_USERNAME")
+            db_pass = os.getenv("DB_PASSWORD")
 
-            self.client = MongoClient(db_host)
+            self.client = MongoClient(
+                host=db_host,
+                username=db_user,
+                password=db_pass,
+                authSource="admin"
+            )
 
             self.db = self.client["log430"]
-
             self.users = self.db["users"]
 
         except Exception as e:
